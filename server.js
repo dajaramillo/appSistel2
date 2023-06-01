@@ -13,6 +13,7 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const app = express();
 require('./database');
 //require('./config/passport');
+
 //configuraciones
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views')); //asignamos la carpeta views dentro de src
@@ -23,6 +24,7 @@ app.engine('.hbs', exphbs.engine({
     handlebars: allowInsecurePrototypeAccess(Handlebars),
     extname: '.hbs' //extensión de los archivos
 }));
+
 app.set('view engine', '.hbs'); //motor de vistas en hbs
 
 //Middlewares
@@ -46,7 +48,7 @@ app.use((req, res, next)=>{
 });
 // Routes
 app.use(require('./routes/index')); //rutas
-//app.use(require('./routes/users'));
+app.use(require('./routes/login'));
 //app.use(require('./routes/objects'));
 
 //Static files

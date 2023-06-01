@@ -5,11 +5,6 @@ router.get('/', (req, res) => {
     //res.render('index');
 });
 
-router.get('/prueba', (req, res) => {
-    res.send('Este es la prueba');
-    //res.render('index');
-});
-
 router.get('/about', (req, res) => {
     //res.send('Este es el Acerca');
     res.render('about');
