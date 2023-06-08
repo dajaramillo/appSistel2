@@ -12,16 +12,35 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const {nombre,correo,password,password2} = req.body;
+    const { nombre, correo, password, password2 } = req.body;
+    const errors = [];
     if(nombre.length <= 0){
-        console.log('Introduce nombre');
+        errors.push({text: 'Ingrese el nombre'})
     }
-    else{
-        console.log(nombre);
+    if(password != password2) {
+        errors.push({text: 'Contraseñas no coinciden'});
     }
-
-    const newUser = new Usuario({nombre, correo, password});
-    await newUser.save();
+    if(password.length < 4){
+        errors.push({text: 'Contraseña mínimo de 4 caracteres'})
+    }
+    if(errors.length > 0){
+        res.render('login/register', {errors, nombre, correo, password, password2});
+    } else {
+        //res.send('OK');
+        const emailUser = await Usuario.findOne({correo: correo});
+        if(emailUser){
+            req.flash('error_msg', 'El correo ya está registrado');
+            res.redirect('/register');
+            
+            
+        } else {
+        const newUser = new Usuario({nombre, correo, password});
+        newUser.password = await newUser.encryptPassword(password);
+        await newUser.save();
+        req.flash('success_msg', 'Usuario Registrado');
+        res.redirect('/login');
+        }
+    }
 
 });
 
