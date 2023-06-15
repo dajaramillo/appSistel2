@@ -1,11 +1,22 @@
 const router = require('express').Router();
 const Usuario = require('../models/Usuario')
+const passport = require('passport');
 
+//Métodos GET y POST para el inicio de sesión
 router.get('/login', (req, res) => {
     //res.send('Este es el LOGIN');
     res.render('login/login');
 });
 
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+
+
+
+//Métodos GET y POST para el registro
 router.get('/register', (req, res) => {
     //res.send('Este es el REGISTER');
     res.render('login/register'); //Este es el archivop hbs
@@ -44,5 +55,12 @@ router.post('/register', async (req, res) => {
 
 });
 
+router.get('/logout', (req, res) => {
+    req.logout((err)=>{
+        if(err) { return next(err);}
+        res.redirect('/');
+    });
+    
+});
 
 module.exports = router;

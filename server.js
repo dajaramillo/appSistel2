@@ -12,7 +12,7 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 //Inicializaciones
 const app = express();
 require('./database');
-//require('./config/passport');
+require('./config/passport');
 
 //configuraciones
 app.set('port', process.env.PORT || 3000);
@@ -44,12 +44,13 @@ app.use((req, res, next)=>{
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
     next();
 });
 // Routes
 app.use(require('./routes/index')); //rutas
 app.use(require('./routes/login'));
-//app.use(require('./routes/objects'));
+app.use(require('./routes/app'));
 
 //Static files
 app.use(express.static(path.join(__dirname, 'public')));
